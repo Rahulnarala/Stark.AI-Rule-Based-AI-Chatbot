@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<!-- saved from url=(0054)file:///C:/Users/rahul%20narala/Downloads/index_1.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stark.AI — Rule-Based Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com/">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+  <link href="./Stark.AI — Rule-Based Intelligence_files/css2" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cyan: #00D4FF;
+      --gold: #FFD700;
+      --bg: #05050d;
+      --panel: #0a0a16;
+      --panel2: #0d0d1e;
+      --border: #1a2040;
+      --border2: #111828;
+      --text: #c8d8f0;
+      --text-muted: #4a5a7a;
+      --text-dim: #2a3a5a;
+      --green: #00ff88;
+      --red: #ff4455;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      overflow: hidden;
+    }
+
+    /* ── LAYOUT ── */
+    .app {
+      display: grid;
+      grid-template-rows: auto 1fr;
+      height: 100vh;
+    }
+
+    /* ── TOPBAR ── */
+    .topbar {
+      background: var(--panel2);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      height: 64px;
+      flex-shrink: 0;
+    }
+
+    .arc-ring {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      border: 2px solid var(--cyan);
+      background: var(--bg);
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+      animation: ring-pulse 2.5s ease-in-out infinite;
+      flex-shrink: 0;
+    }
+
+    .arc-ring::before {
+      content: '';
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      background: var(--cyan);
+      opacity: 0.85;
+      animation: core-pulse 2.5s ease-in-out infinite;
+    }
+
+    @keyframes ring-pulse {
+      0%,100% { box-shadow: 0 0 10px #00D4FF44, 0 0 20px #00D4FF18; }
+      50%      { box-shadow: 0 0 18px #00D4FFaa, 0 0 36px #00D4FF44; }
+    }
+    @keyframes core-pulse {
+      0%,100% { opacity: 0.6; transform: scale(1); }
+      50%      { opacity: 1;   transform: scale(1.08); }
+    }
+
+    .brand { flex: 1; }
+    .brand-name {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--cyan);
+      letter-spacing: 3px;
+    }
+    .brand-sub {
+      font-size: 10.5px;
+      color: var(--text-muted);
+      letter-spacing: 0.8px;
+      margin-top: 2px;
+    }
+
+    .hud-pills {
+      display: flex; gap: 10px;
+      align-items: center;
+    }
+    .hud-pill {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 9px;
+      letter-spacing: 1.5px;
+      color: var(--text-dim);
+      background: var(--panel);
+      border: 1px solid var(--border2);
+      padding: 4px 10px;
+      border-radius: 4px;
+    }
+
+    .status-badge {
+      display: flex; align-items: center; gap: 6px;
+      background: var(--panel);
+      border: 1px solid var(--border2);
+      padding: 5px 12px;
+      border-radius: 6px;
+    }
+    .status-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: blink 2s ease-in-out infinite;
+      transition: background 0.5s;
+    }
+    .status-text {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 9px;
+      color: var(--green);
+      letter-spacing: 1.5px;
+      transition: color 0.5s;
+    }
+    @keyframes blink {
+      0%,100% { opacity: 1; }
+      50%      { opacity: 0.25; }
+    }
+
+    /* ── MAIN AREA ── */
+    .main {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      background: var(--panel2);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .sidebar-section {
+      padding: 14px 16px 10px;
+      border-bottom: 1px solid var(--border2);
+    }
+    .sidebar-label {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 8.5px;
+      letter-spacing: 2px;
+      color: var(--text-dim);
+      margin-bottom: 10px;
+    }
+
+    .quick-btn {
+      display: block;
+      width: 100%;
+      text-align: left;
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      font-family: 'Inter', sans-serif;
+      font-size: 12.5px;
+      padding: 7px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-bottom: 2px;
+      transition: all 0.15s;
+    }
+    .quick-btn:hover {
+      background: #0d1830;
+      border-color: var(--border);
+      color: var(--cyan);
+    }
+    .quick-btn .qb-icon { margin-right: 8px; font-size: 13px; }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      padding: 12px 16px;
+    }
+    .stat-card {
+      background: var(--panel);
+      border: 1px solid var(--border2);
+      border-radius: 8px;
+      padding: 10px 12px;
+    }
+    .stat-val {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--cyan);
+    }
+    .stat-lbl {
+      font-size: 9.5px;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+      margin-top: 2px;
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      padding: 14px 16px;
+      border-top: 1px solid var(--border2);
+    }
+    .sidebar-footer p {
+      font-size: 10px;
+      color: var(--text-dim);
+      line-height: 1.6;
+    }
+    .sidebar-footer a {
+      color: var(--cyan);
+      text-decoration: none;
+      font-size: 10px;
+    }
+    .sidebar-footer a:hover { text-decoration: underline; }
+
+    /* ── CHAT AREA ── */
+    .chat-area {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .chat-hud {
+      background: #06060f;
+      border-bottom: 1px solid var(--border2);
+      padding: 5px 20px;
+      display: flex;
+      gap: 24px;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .hud-item {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 8.5px;
+      letter-spacing: 1.5px;
+    }
+    .hud-item .h-key { color: var(--text-dim); }
+    .hud-item .h-val { color: #00D4FF66; margin-left: 4px; }
+
+    /* ── MESSAGES ── */
+    .messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+    }
+
+    .msg-row {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      animation: slide-in 0.22s ease;
+    }
+    .msg-row.user { flex-direction: row-reverse; }
+
+    @keyframes slide-in {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .avatar {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 9px;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin-top: 2px;
+    }
+    .avatar.bot  { background: #0a1625; border: 1px solid #00D4FF44; color: var(--cyan); }
+    .avatar.user { background: #120a25; border: 1px solid #FFD70044; color: var(--gold); }
+
+    .msg-col {
+      display: flex;
+      flex-direction: column;
+      max-width: 68%;
+    }
+
+    .bubble {
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 13.5px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .bubble.bot {
+      background: #0b1428;
+      border: 1px solid #162040;
+      border-top-left-radius: 4px;
+      color: var(--text);
+    }
+    .bubble.user {
+      background: #100820;
+      border: 1px solid #201040;
+      border-top-right-radius: 4px;
+      color: #e0d8ff;
+    }
+
+    .msg-meta {
+      font-size: 10px;
+      color: var(--text-dim);
+      margin-top: 4px;
+    }
+    .msg-row.user .msg-meta { text-align: right; }
+
+    /* typing indicator */
+    .typing {
+      display: flex; gap: 4px; align-items: center;
+      padding: 4px 2px;
+    }
+    .typing span {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: #00D4FF55;
+      animation: bounce 1s infinite;
+    }
+    .typing span:nth-child(2) { animation-delay: 0.2s; }
+    .typing span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce {
+      0%,100% { transform: translateY(0); opacity: 0.4; }
+      50%      { transform: translateY(-5px); opacity: 1; }
+    }
+
+    /* ── CHIPS ── */
+    .chip-bar {
+      padding: 8px 20px;
+      display: flex; gap: 6px; flex-wrap: wrap;
+      border-top: 1px solid var(--border2);
+      background: var(--bg);
+      flex-shrink: 0;
+    }
+    .chip {
+      background: var(--panel2);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 11.5px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: all 0.15s;
+    }
+    .chip:hover {
+      background: #0d1830;
+      border-color: #00D4FF55;
+      color: var(--cyan);
+    }
+
+    /* ── INPUT ── */
+    .input-bar {
+      display: flex; gap: 10px;
+      padding: 12px 20px 16px;
+      background: var(--bg);
+      border-top: 1px solid var(--border2);
+      flex-shrink: 0;
+    }
+    .chat-input {
+      flex: 1;
+      background: var(--panel2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 11px 16px;
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 13.5px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .chat-input:focus { border-color: #00D4FF55; }
+    .chat-input::placeholder { color: var(--text-dim); }
+
+    .send-btn {
+      background: #00D4FF15;
+      border: 1px solid #00D4FF40;
+      color: var(--cyan);
+      border-radius: 10px;
+      padding: 11px 20px;
+      cursor: pointer;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      transition: all 0.15s;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .send-btn:hover {
+      background: #00D4FF28;
+      border-color: #00D4FF80;
+    }
+    .send-btn:active { transform: scale(0.97); }
+    .send-icon {
+      width: 14px; height: 14px;
+      display: inline-block;
+      border-top: 2px solid currentColor;
+      border-right: 2px solid currentColor;
+      transform: rotate(45deg);
+    }
+
+    /* ── WELCOME SPLASH ── */
+    .welcome {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      gap: 10px;
+      text-align: center;
+      pointer-events: none;
+    }
+    .welcome-icon {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      background: var(--panel2);
+      border: 2px solid #00D4FF44;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 8px;
+      animation: ring-pulse 2.5s ease-in-out infinite;
+    }
+    .welcome-icon::after {
+      content: '';
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      background: var(--cyan);
+      opacity: 0.7;
+      animation: core-pulse 2.5s ease-in-out infinite;
+    }
+    .welcome h2 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 24px;
+      color: var(--cyan);
+      letter-spacing: 4px;
+    }
+    .welcome p {
+      font-size: 13px;
+      color: var(--text-muted);
+      max-width: 340px;
+      line-height: 1.6;
+    }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+    /* ── MOBILE ── */
+    @media (max-width: 700px) {
+      .main { grid-template-columns: 1fr; }
+      .sidebar { display: none; }
+      .hud-pills { display: none; }
+      .topbar { padding: 0 14px; }
+      .brand-name { font-size: 15px; }
+      .messages { padding: 14px; }
+      .input-bar { padding: 10px 14px 14px; }
+      .chip-bar { padding: 6px 14px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="arc-ring" aria-hidden="true"></div>
+    <div class="brand">
+      <div class="brand-name">STARK.AI</div>
+      <div class="brand-sub">Transforming information into insights.</div>
+    </div>
+    <div class="hud-pills">
+      <div class="hud-pill">ENGINE: DETERMINISTIC</div>
+      <div class="hud-pill">ALGO: O(1)</div>
+      <div class="hud-pill">MODEL: IPO</div>
+    </div>
+    <div class="status-badge">
+      <div class="status-dot" id="status-dot"></div>
+      <div class="status-text" id="status-text">ONLINE</div>
+    </div>
+  </header>
+
+  <div class="main">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+      <div class="sidebar-section">
+        <div class="sidebar-label">QUICK COMMANDS</div>
+        <button class="quick-btn" onclick="sendChip(&#39;hello&#39;)"><span class="qb-icon">👋</span>hello</button>
+        <button class="quick-btn" onclick="sendChip(&#39;how are you&#39;)"><span class="qb-icon">💬</span>how are you</button>
+        <button class="quick-btn" onclick="sendChip(&#39;who are you&#39;)"><span class="qb-icon">🤖</span>who are you</button>
+        <button class="quick-btn" onclick="sendChip(&#39;what can you do&#39;)"><span class="qb-icon">⚡</span>what can you do</button>
+        <button class="quick-btn" onclick="sendChip(&#39;time&#39;)"><span class="qb-icon">🕐</span>current time</button>
+        <button class="quick-btn" onclick="sendChip(&#39;date&#39;)"><span class="qb-icon">📅</span>today's date</button>
+        <button class="quick-btn" onclick="sendChip(&#39;joke&#39;)"><span class="qb-icon">😄</span>tell me a joke</button>
+        <button class="quick-btn" onclick="sendChip(&#39;fact&#39;)"><span class="qb-icon">💡</span>give me a fact</button>
+        <button class="quick-btn" onclick="sendChip(&#39;help&#39;)"><span class="qb-icon">📋</span>help / commands</button>
+        <button class="quick-btn" onclick="sendChip(&#39;about&#39;)"><span class="qb-icon">🏗️</span>about stark.ai</button>
+        <button class="quick-btn" onclick="sendChip(&#39;bye&#39;)"><span class="qb-icon">🚪</span>goodbye</button>
+      </div>
+
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-val" id="s-messages">1</div>
+          <div class="stat-lbl">Messages</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val" id="s-intents">30+</div>
+          <div class="stat-lbl">Intents</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val">O(1)</div>
+          <div class="stat-lbl">Complexity</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val">0%</div>
+          <div class="stat-lbl">Hallucination</div>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-label">ARCHITECTURE</div>
+        <div style="font-size: 11px; color: var(--text-muted); line-height: 1.8;">
+          ✦ Input Sanitization (.lower().strip())<br>
+          ✦ Dictionary Lookup O(1)<br>
+          ✦ Fallback Default Response<br>
+          ✦ Exit Strategy (break)<br>
+          ✦ Continuous While Loop
+        </div>
+      </div>
+
+      <div class="sidebar-footer">
+        <p>Deterministic. Reliable. Always ready.</p>
+        <br>
+
+      </div>
+
+    </aside>
+
+    <!-- CHAT -->
+    <section class="chat-area">
+
+      <div class="chat-hud">
+        <div class="hud-item"><span class="h-key">LOOP</span><span class="h-val">WHILE TRUE</span></div>
+        <div class="hud-item"><span class="h-key">SANITIZE</span><span class="h-val">.lower().strip()</span></div>
+        <div class="hud-item"><span class="h-key">LOOKUP</span><span class="h-val">dict.get()</span></div>
+        <div class="hud-item"><span class="h-key">MSGS</span><span class="h-val" id="hud-msgs">1</span></div>
+        <div class="hud-item" style="margin-left:auto;"><span class="h-key">SESSION</span><span class="h-val" id="hud-time">05:36 PM</span></div>
+      </div>
+
+      <div class="messages" id="chat-window">
+        
+      <div class="msg-row bot"><div class="avatar bot" aria-hidden="true">AI</div><div class="msg-col"><div class="bubble bot">STARK.AI INITIALIZED.
+Rule-based intelligence engine online.
+Dictionary loaded with 30+ intents.
+Input sanitization active.
+IPO loop running.
+
+━━━━━━━━━━━━━━━━━━
+Hello! I'm Stark.AI — your deterministic AI assistant.
+
+Ask me anything, or type 'help' to see all commands.</div><div class="msg-meta">Stark.AI · 05:36 PM</div></div></div></div>
+
+      <div class="chip-bar">
+        <button class="chip" onclick="sendChip(&#39;hello&#39;)">👋 hello</button>
+        <button class="chip" onclick="sendChip(&#39;how are you&#39;)">how are you?</button>
+        <button class="chip" onclick="sendChip(&#39;joke&#39;)">joke</button>
+        <button class="chip" onclick="sendChip(&#39;fact&#39;)">fact</button>
+        <button class="chip" onclick="sendChip(&#39;time&#39;)">time</button>
+        <button class="chip" onclick="sendChip(&#39;help&#39;)">help</button>
+        <button class="chip" onclick="sendChip(&#39;about&#39;)">about</button>
+        <button class="chip" onclick="sendChip(&#39;bye&#39;)">bye 👋</button>
+      </div>
+
+      <div class="input-bar">
+        <input type="text" id="chat-input" class="chat-input" placeholder="Talk to Stark.AI…" autocomplete="off" aria-label="Message input">
+        <button class="send-btn" onclick="handleSend()" aria-label="Send message">
+          <span class="send-icon" aria-hidden="true"></span>
+          SEND
+        </button>
+      </div>
+
+    </section>
+  </div>
+</div>
+
+<script>
+  /* ── KNOWLEDGE BASE (Dictionary O(1) lookup) ── */
+  const KB = {
+    /* greetings */
+    'hello':         'Hey there! Stark.AI online — all systems operational. How can I assist you today?',
+    'hi':            'Hi! Stark.AI at your service. What can I do for you?',
+    'hey':           'Hey! Good to hear from you. How can I help?',
+    'howdy':         'Howdy! Systems are green. What do you need?',
+    'good morning':  'Good morning! Stark.AI systems are up and running. Ready to assist.',
+    'good afternoon':'Good afternoon! How can I help you today?',
+    'good evening':  'Good evening! What can I do for you tonight?',
+    'good night':    'Good night! Rest well. Stark.AI will be here when you return.',
+    /* status */
+    'how are you':         'All systems nominal. Running at 100% efficiency — just like a well-engineered suit. What about you?',
+    'how are you doing':   'All systems nominal. Running at 100% efficiency — just like a well-engineered suit. What about you?',
+    "what's up":           'Nothing much — just processing at the speed of logic. What do you need?',
+    'how do you do':       'I do very well, thank you. Deterministic and proud of it. How can I help?',
+    /* identity */
+    'who are you':       "I'm Stark.AI — a rule-based intelligence system powered by deterministic logic. No hallucinations, no surprises, 100% traceable.",
+    'what are you':      "I'm Stark.AI — a rule-based chatbot. My brain is a dictionary. Every input is sanitized, looked up in O(1) time, and matched to a hardcoded response.",
+    'your name':         "My name is Stark.AI — your deterministic AI assistant, always ready to help.",
+    'what is your name': "My name is Stark.AI — your deterministic AI assistant, always ready to help.",
+    /* capabilities */
+    'what can you do': 'I can chat, answer questions, tell jokes, share facts, give you the time/date, and say goodbye gracefully. Type \'help\' for the full command list.',
+    'help':            'Available commands:\n━━━━━━━━━━━━━━━━━━\n👋  Greetings: hello, hi, hey, good morning/evening\n💬  Status:    how are you, what\'s up\n🤖  Identity:  who are you, what are you\n📋  Info:      time, date, weather, fact, joke\n🏗️  System:    about, python, ai, machine learning\n🙏  Social:    thanks, cool, nice\n🚪  Exit:      bye, goodbye, exit, quit\n━━━━━━━━━━━━━━━━━━',
+    /* time & date */
+    'time': () => `Current time: ${new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', second:'2-digit'})} — Stark.AI timestamp confirmed.`,
+    'what time is it': () => `It is currently ${new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}. Stark.AI clock is always accurate.`,
+    'date': () => `Today is ${new Date().toLocaleDateString(undefined, {weekday:'long', year:'numeric', month:'long', day:'numeric'})}.`,
+    "what's today's date": () => `Today is ${new Date().toLocaleDateString(undefined, {weekday:'long', year:'numeric', month:'long', day:'numeric'})}.`,
+    /* knowledge */
+    'weather':          "I'm rule-based, so I can't pull live weather data. But I can tell you it's always a perfect day for building intelligent systems.",
+    'joke':             'Why do programmers prefer dark mode?\n\nBecause light attracts bugs! 🐛',
+    'tell me a joke':   'Why do programmers prefer dark mode?\n\nBecause light attracts bugs! 🐛',
+    'another joke':     'Why did the AI go to therapy? It had too many unresolved if-else conflicts. 😄',
+    'fact':             'Interesting fact: The first chatbot, ELIZA, was created in 1966 by Joseph Weizenbaum at MIT — and it used rule-based pattern matching, just like me.',
+    'give me a fact':   'Interesting fact: The first chatbot, ELIZA, was created in 1966 by Joseph Weizenbaum at MIT — and it used rule-based pattern matching, just like me.',
+    'fun fact':         'Fun fact: A dictionary lookup in Python (and most hash-map implementations) runs in O(1) constant time — meaning 10,000 rules is just as fast as 10 rules.',
+    /* tech topics */
+    'python':           'Python is the ideal language for this project. Key concepts used:\n• while True → infinite loop\n• .lower().strip() → input sanitization\n• dict.get(key, fallback) → O(1) lookup with built-in fallback\n• break → clean exit command',
+    'ai':               'Artificial Intelligence has two core paradigms:\n\n1. Deterministic (Rule-Based) — like me. Traceable, safe, no hallucinations.\n2. Probabilistic (ML/LLM) — learns from data but can hallucinate.\n\nYou must master #1 before deploying #2.',
+    'machine learning': 'Machine learning models learn patterns from data using probability. I\'m the opposite — fully deterministic. Every decision I make can be traced and explained.',
+    'about':            'Stark.AI is a rule-based intelligence engine built on the IPO Model:\n\n• Input → Sanitization & Normalization\n• Process → Dictionary Lookup O(1)\n• Output → Response Generation\n\nEngine: Deterministic | Hallucination risk: 0%',
+    'decodelabs':       'Sorry, I don\'t have information about that. Try asking me about AI, Python, or type \'help\' for all commands.',
+    'ipo':              'The IPO model (Input → Process → Output) is the foundational blueprint for this chatbot:\n• Input: raw user text, sanitized via .lower().strip()\n• Process: dictionary lookup, intent matching\n• Output: response generation and display',
+    /* social */
+    'thanks':       "You're welcome! That's what I'm here for. Anything else I can help with?",
+    'thank you':    "You're welcome! That's what I'm here for. Anything else I can help with?",
+    'cool':         'Glad you think so! Deterministic logic at its finest. What else?',
+    'nice':         'Thank you! What else can I do for you?',
+    'wow':          'I know, right? O(1) lookup speed and zero hallucinations. What\'s next?',
+    'ok':           'Understood. Anything else I can help you with?',
+    'okay':         'Understood. Anything else I can help you with?',
+    'yes':          'Great! What would you like to know?',
+    'no':           'Alright. Feel free to ask anything anytime.',
+    'maybe':        'Take your time. I\'ll be here whenever you\'re ready.',
+    'great':        'Glad to hear it! What else can I do for you?',
+    'awesome':      'Awesome indeed! Rule-based and proud. What\'s next?',
+    /* exit */
+    'bye':          'Goodbye! Stark.AI shutting down gracefully.\nIt was a pleasure chatting with you. See you next time! 👋',
+    'goodbye':      'Goodbye! Stark.AI shutting down gracefully.\nIt was a pleasure chatting with you. See you next time! 👋',
+    'exit':         'Session terminated on command. Stark.AI standing by.\nRefresh the page to start a new session.',
+    'quit':         'Session terminated on command. Stark.AI standing by.\nRefresh the page to start a new session.',
+    'see you':      'See you! Stay curious and keep building. 👋',
+    'see you later':'See you later! Stark.AI will be here when you return. 👋',
+  };
+
+  const FALLBACK = "I don't have a rule for that yet. My knowledge base covers greetings, time, jokes, facts, tech topics, and more.\n\nType 'help' to see all available commands.";
+  const EXIT_KEYS = new Set(['bye','goodbye','exit','quit','see you','see you later']);
+
+  /* ── STATE ── */
+  let msgCount = 0;
+  let welcomeRemoved = false;
+  const startTime = Date.now();
+
+  /* ── CLOCK ── */
+  function updateClock() {
+    document.getElementById('hud-time').textContent = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+
+  /* ── HELPERS ── */
+  function sanitize(raw) {
+    return raw.toLowerCase().trim().replace(/[^a-z0-9 '?!]/g, '').trim();
+  }
+
+  function getReply(clean) {
+    const val = KB[clean];
+    if (val === undefined) return null;
+    return typeof val === 'function' ? val() : val;
+  }
+
+  function getTime() {
+    return new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+  }
+
+  function updateStats() {
+    document.getElementById('s-messages').textContent = msgCount;
+    document.getElementById('hud-msgs').textContent = msgCount;
+  }
+
+  /* ── RENDER MESSAGE ── */
+  function appendMsg(text, role, withTyping) {
+    const win = document.getElementById('chat-window');
+
+    if (!welcomeRemoved) {
+      const ws = document.getElementById('welcome-screen');
+      if (ws) ws.remove();
+      welcomeRemoved = true;
+    }
+
+    const row = document.createElement('div');
+    row.className = 'msg-row ' + role;
+
+    const av = document.createElement('div');
+    av.className = 'avatar ' + (role === 'bot' ? 'bot' : 'user');
+    av.textContent = role === 'bot' ? 'AI' : 'YOU';
+    av.setAttribute('aria-hidden', 'true');
+
+    const col = document.createElement('div');
+    col.className = 'msg-col';
+
+    const bub = document.createElement('div');
+    bub.className = 'bubble ' + (role === 'bot' ? 'bot' : 'user');
+
+    const meta = document.createElement('div');
+    meta.className = 'msg-meta';
+    meta.textContent = (role === 'bot' ? 'Stark.AI · ' : 'You · ') + getTime();
+
+    col.appendChild(bub);
+    col.appendChild(meta);
+    row.appendChild(av);
+    row.appendChild(col);
+    win.appendChild(row);
+
+    if (withTyping) {
+      const ind = document.createElement('div');
+      ind.className = 'typing';
+      ind.innerHTML = '<span></span><span></span><span></span>';
+      bub.appendChild(ind);
+      win.scrollTop = win.scrollHeight;
+
+      setTimeout(() => {
+        bub.innerHTML = '';
+        bub.textContent = text;
+        win.scrollTop = win.scrollHeight;
+        msgCount++;
+        updateStats();
+      }, 550);
+    } else {
+      bub.textContent = text;
+      win.scrollTop = win.scrollHeight;
+      msgCount++;
+      updateStats();
+    }
+  }
+
+  /* ── HANDLE SEND ── */
+  function handleSend() {
+    const input = document.getElementById('chat-input');
+    const raw = input.value.trim();
+    if (!raw) return;
+    input.value = '';
+
+    appendMsg(raw, 'user', false);
+
+    const clean = sanitize(raw);
+    let reply = getReply(clean);
+    if (reply === null) reply = FALLBACK;
+
+    if (EXIT_KEYS.has(clean)) {
+      setTimeout(() => {
+        const dot = document.getElementById('status-dot');
+        const txt = document.getElementById('status-text');
+        dot.style.background = '#ff4455';
+        dot.style.animation = 'none';
+        txt.style.color = '#ff4455';
+        txt.textContent = 'OFFLINE';
+      }, 800);
+    }
+
+    appendMsg(reply, 'bot', true);
+  }
+
+  function sendChip(text) {
+    document.getElementById('chat-input').value = text;
+    handleSend();
+  }
+
+  document.getElementById('chat-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') handleSend();
+  });
+
+  /* ── BOOT MESSAGE ── */
+  setTimeout(() => {
+    appendMsg(
+      'STARK.AI INITIALIZED.\nRule-based intelligence engine online.\nDictionary loaded with 30+ intents.\nInput sanitization active.\nIPO loop running.\n\n━━━━━━━━━━━━━━━━━━\nHello! I\'m Stark.AI — your deterministic AI assistant.\n\nAsk me anything, or type \'help\' to see all commands.',
+      'bot', true
+    );
+  }, 600);
+</script>
+
+
+
+</body></html>
