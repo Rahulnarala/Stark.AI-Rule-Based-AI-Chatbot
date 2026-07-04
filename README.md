@@ -1,4 +1,4 @@
-# Stark.AI
+# Stark.AI - Rule Based AI Chatbot
 
 Stark.AI is a rule-based AI chatbot developed to demonstrate the fundamentals of Artificial Intelligence using predefined rules and logical decision-making. Unlike machine learning chatbots, Stark.AI responds to user queries by analyzing keywords and matching them with predefined conditions using `if-else` logic. The chatbot provides fast, consistent, and reliable responses for supported queries while maintaining a continuous conversational experience through an interactive web interface.
 
